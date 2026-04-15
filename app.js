@@ -12,7 +12,7 @@ app.use(express.static('public'));
 const db = mysql.createConnection({
     host: 'db-laporsampah.ch4o40mwa55b.ap-southeast-2.rds.amazonaws.com',
     user: 'admin',
-    password: 'passworduts123',
+    password: 'admin123',
     database: 'laporsampah',
     port: 3306
 });
