@@ -1,61 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lapor Sampah UTS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Lapor Sampah | Sistem Monitoring Lingkungan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-    <div class="container py-5">
-        <h1 class="text-center mb-4">🗑️ Sistem Lapor Sampah Liar</h1>
-        
-        <div class="card shadow-sm mb-5">
-            <div class="card-body">
-                <h5 class="card-title">Buat Laporan Baru</h5>
-                <form action="/lapor" method="POST">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Pelapor</label>
-                        <input type="text" name="nama_pelapor" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Lokasi Sampah</label>
-                        <input type="text" name="lokasi_sampah" class="form-control" placeholder="Contoh: Jl. Kenangan No. 4" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" class="form-control" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Kirim Laporan!</button>
-                </form>
-            </div>
+<body class="bg-slate-50 font-sans leading-normal tracking-normal">
+
+    <nav class="bg-emerald-600 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-2xl font-bold flex items-center gap-2">
+                <i class="fas fa-trash-can"></i> LaporSampah.id
+            </h1>
+            <span class="text-emerald-100 text-sm italic">Sistem Monitoring Sampah Liar - UTS Cloud</span>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-10 transition-all hover:shadow-md">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-plus-circle text-emerald-500"></i> Buat Laporan Baru
+            </h2>
+            
+            <form action="/lapor" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Nama Pelapor</label>
+                    <input type="text" name="nama" required placeholder="Contoh: Bambang" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Lokasi Sampah</label>
+                    <input type="text" name="lokasi" required placeholder="Jl. Kenangan No. 4" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
+                </div>
+
+                <div class="md:col-span-2 space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Deskripsi Masalah</label>
+                    <textarea name="deskripsi" rows="3" required placeholder="Jelaskan kondisi sampah..." class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"></textarea>
+                </div>
+
+                <div class="md:col-span-2 space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Bukti Foto (Upload ke S3)</label>
+                    <input type="file" name="foto" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                </div>
+
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg flex justify-center items-center gap-2 text-lg">
+                        <i class="fas fa-paper-plane"></i> Kirim Laporan Sekarang
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <h3 class="mb-3">Daftar Laporan Terbaru</h3>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover bg-white shadow-sm">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Nama</th>
-                        <th>Lokasi</th>
-                        <th>Deskripsi</th>
-                        <th>Status</th>
-                        <th>Waktu</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% laporan.forEach(item => { %>
-                    <tr>
-                        <td><%= item.nama_pelapor %></td>
-                        <td><%= item.lokasi_sampah %></td>
-                        <td><%= item.deskripsi %></td>
-                        <td><span class="badge bg-warning text-dark"><%= item.status %></span></td>
-                        <td><%= item.created_at.toLocaleString() %></td>
-                    </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-list-ul text-emerald-500"></i> Monitoring Laporan
+                </h2>
+                <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Live dari RDS</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-600 uppercase text-xs font-bold">
+                            <th class="px-6 py-4 border-b border-slate-100">Pelapor</th>
+                            <th class="px-6 py-4 border-b border-slate-100">Lokasi & Deskripsi</th>
+                            <th class="px-6 py-4 border-b border-slate-100">Foto (S3)</th>
+                            <th class="px-6 py-4 border-b border-slate-100">Status</th>
+                            <th class="px-6 py-4 border-b border-slate-100 text-center">Aksi Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <% laporan.forEach(item => { %>
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4 font-medium text-slate-900"><%= item.nama %></td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-semibold text-slate-700"><%= item.lokasi %></div>
+                                <div class="text-xs text-slate-500 mt-1"><%= item.deskripsi %></div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <% if(item.foto_url) { %>
+                                    <a href="<%= item.foto_url %>" target="_blank" class="text-emerald-600 hover:text-emerald-800 transition-colors">
+                                        <i class="fas fa-image text-xl"></i>
+                                    </a>
+                                <% } else { %>
+                                    <span class="text-slate-300 italic text-xs">No Photo</span>
+                                <% } %>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="<%= item.status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' %> px-3 py-1 rounded-lg text-xs font-bold">
+                                    <%= item.status %>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <a href="/selesai/<%= item.id %>" title="Tandai Selesai" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg transition-colors">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <a href="/hapus/<%= item.id %>" title="Hapus Laporan" onclick="return confirm('Yakin ingin menghapus?')" class="bg-rose-500 hover:bg-rose-600 text-white p-2 rounded-lg transition-colors">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <footer class="mt-12 py-8 border-t border-slate-200 text-center text-slate-400 text-sm">
+        <p>&copy; 2026 UTS Cloud Computing</p>
+    </footer>
+
 </body>
 </html>
