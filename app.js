@@ -9,8 +9,8 @@ const app = express();
 const s3 = new S3Client({
     region: 'ap-southeast-2', 
     credentials: {
-        accessKeyId: 'SENSOR', 
-        secretAccessKey: 'SENSOR'
+        accessKeyId: 'AKIA57OHAJA46OGI4SOP', 
+        secretAccessKey: '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'
     }
 });
 
