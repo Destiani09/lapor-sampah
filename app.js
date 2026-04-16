@@ -59,26 +59,17 @@ app.get('/', (req, res) => {
 });
 
 // Fitur 2: CREATE + UPLOAD S3 (Simpan Laporan Baru)
-app.post('/lapor', (req, res) => {
-    upload.single('foto')(req, res, function (err) {
+app.post('/lapor', upload.single('foto'), (req, res) => {
+    const { nama, lokasi, deskripsi } = req.body; 
+    const foto_url = req.file ? req.file.location : null; 
+
+    const query = 'INSERT INTO laporan_sampah (nama_pelapor, lokasi_sampah, deskripsi, foto_url, status) VALUES (?, ?, ?, ?, "Menunggu")';
+    db.query(query, [nama, lokasi, deskripsi, foto_url], (err) => {
         if (err) {
-            console.log("--- ERROR UPLOAD S3 ---");
-            console.log(err);
-            return res.status(500).send("Gagal Upload ke S3: " + err.message);
+            console.error("Gagal simpan ke DB:", err);
+            return res.status(500).send("Gagal simpan data: " + err.message);
         }
-
-        const { nama, lokasi, deskripsi } = req.body;
-        const foto_url = req.file ? req.file.location : null;
-
-        const query = 'INSERT INTO laporan_sampah (nama_pelapor, lokasi_sampah, deskripsi, foto_url, status) VALUES (?, ?, ?, ?, "Menunggu")';
-        db.query(query, [nama, lokasi, deskripsi, foto_url], (dbErr) => {
-            if (dbErr) {
-                console.log("--- ERROR DATABASE ---");
-                console.log(dbErr);
-                return res.status(500).send("Gagal Simpan ke DB: " + dbErr.message);
-            }
-            res.redirect('/');
-        });
+        res.redirect('/');
     });
 });
 
