@@ -60,12 +60,15 @@ app.get('/', (req, res) => {
 
 // Fitur 2: CREATE + UPLOAD S3 (Simpan Laporan Baru)
 app.post('/lapor', upload.single('foto'), (req, res) => {
-    const { nama_pelapor, lokasi_sampah, deskripsi } = req.body;
+    const { nama, lokasi, deskripsi } = req.body; 
     const foto_url = req.file ? req.file.location : null; 
 
     const query = 'INSERT INTO laporan_sampah (nama_pelapor, lokasi_sampah, deskripsi, foto_url, status) VALUES (?, ?, ?, ?, "Menunggu")';
-    db.query(query, [nama_pelapor, lokasi_sampah, deskripsi, foto_url], (err) => {
-        if (err) throw err;
+    db.query(query, [nama, lokasi, deskripsi, foto_url], (err) => {
+        if (err) {
+            console.error("Gagal simpan ke DB:", err);
+            return res.status(500).send("Gagal simpan data: " + err.message);
+        }
         res.redirect('/');
     });
 });
