@@ -19,7 +19,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/lapor-sampah
             git pull origin main
             docker rm -f aplikasi-lapor || true
             docker build -t web-lapor .
